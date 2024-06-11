@@ -20,11 +20,11 @@ jobs:
           python-version: '3.11'
 
       - name: Install Development Dependencies
-        run: pip install pytest pytest-html
+        run: make install
 
       - name: Run tests and generate reports
         env:
-          PYTHONPATH: "${{ github.workspace }}/src"
+          PYTHONPATH: ${{ github.workspace }}/src
         run: |
           pytest --junitxml=pytest_report.xml --html=pytest_report.html --self-contained-html
         working-directory: .
@@ -35,4 +35,4 @@ jobs:
         with:
           name: Pytest results
           path: pytest_report.xml
-          reporter: java-junit
+          reporter: junit
