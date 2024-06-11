@@ -1,0 +1,36 @@
+name: Python Tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
+
+      - name: Checkout code
+        uses: actions/checkout@v4.1.1
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5.1.0
+        with:
+          python-version: '3.11'
+
+      - name: Install Development Dependencies
+        run: make install
+
+      - name: Run tests and generate reports
+        run: |
+          PYTHONPATH="${PWD}/src" pytest --junitxml=pytest_report.xml --html=pytest_report.html --self-contained-html
+        working-directory: .
+
+      - name: Publish Test Report
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Pytest results
+          path: pytest_report.xml
+          reporter: junit
