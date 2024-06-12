@@ -22,16 +22,24 @@ jobs:
       - name: Install Development Dependencies
         run: pip install pytest pytest-html
 
-      - name: Display directory structure
+      - name: Display directory structure before tests
         run: ls -R
+
+      - name: Verify Pythonpath
+        run: echo $PYTHONPATH
 
       - name: Run tests and generate reports
         env:
           PYTHONPATH: ${{ github.workspace }}/src
-        run: pytest --junitxml=pytest_report.xml
+        run: |
+          echo "PYTHONPATH is set to $PYTHONPATH"
+          pytest --junitxml=pytest_report.xml
+
+      - name: Display directory structure after tests
+        run: ls -R
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
         with:
-          files: /home/runner/work/dorny2/dorny2/pytest_report.xml
+          files: '**/pytest_report.xml'
