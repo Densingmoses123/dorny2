@@ -22,12 +22,13 @@ jobs:
       - name: Install Development Dependencies
         run: pip install pytest pytest-html
 
+      - name: Display directory structure
+        run: ls -R
+
       - name: Run tests and generate reports
         env:
           PYTHONPATH: ${{ github.workspace }}/src
-        run: |
-          pytest --junitxml=pytest_report.xml
-        working-directory: .
+        run: pytest --junitxml=pytest_report.xml
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
