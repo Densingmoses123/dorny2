@@ -26,13 +26,11 @@ jobs:
         env:
           PYTHONPATH: ${{ github.workspace }}/src
         run: |
-          pytest --junitxml=pytest_report.xml --html=pytest_report.html --self-contained-html
+          pytest --junitxml=pytest_report.xml
         working-directory: .
 
-      - name: Publish Test Report
-        uses: dorny/test-reporter@v1
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action/macos@v2
         if: always()
         with:
-          name: Pytest results
-          path: pytest_report.xml
-          reporter: java-junit
+          files: pytest_report.xml
